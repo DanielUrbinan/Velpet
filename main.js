@@ -195,6 +195,9 @@ const createScrollAnimation = (responsive) => {
   terrierMaterials.forEach(material => {
     material.opacity = 0
   })
+  dog.visible = true
+  german.visible = false
+  terrier.visible = false
   const revealTimeline = gsap.timeline({
     scrollTrigger: {
       trigger: '#about',
@@ -373,6 +376,7 @@ const createScrollAnimation = (responsive) => {
     }, 'scene3+=0.20'
   )
   aboutTimeline.addLabel('scene4')
+
   aboutTimeline.to('.scene3-bg', {
     scale: 30,
     ease: 'power2.inOut'
@@ -421,6 +425,9 @@ const createScrollAnimation = (responsive) => {
     opacity: 0,
     ease: 'back.inOut'
   }, 'scene4-=0.2')
+  aboutTimeline.set(
+    german, { visible: true }, 'scene4-=0.2'
+  )
   aboutTimeline.to(
     germanMaterials, {
       opacity: 1,
@@ -589,6 +596,11 @@ const createScrollAnimation = (responsive) => {
     terrier.rotation, {
       y: Math.PI * 1.15
     }, 'finalScene'
+  )
+  aboutTimeline.set(
+    terrier, {
+      visible: true
+    }, 'finalScene-=0.3'
   )
   aboutTimeline.fromTo(
     terrierMaterials,
