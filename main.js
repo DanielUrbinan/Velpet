@@ -611,15 +611,14 @@ const terrierMaterials = []
 const loadDog = async () => {
   try {
     const base = import.meta.env.BASE_URL
-    const gltf = await loader.loadAsync(
+
+    const [gltf, gltf2, gltf3] = await Promise.all([loader.loadAsync(
       `${base}Models/dog/source/model.glb`
-    )
-    const gltf2 = await loader.loadAsync(
+    ), loader.loadAsync(
       `${base}Models/german/source/model.glb`
-    )
-    const gltf3 = await loader.loadAsync(
+    ), loader.loadAsync(
       `${base}Models/terrier/source/scene 14.glb`
-    )
+    )])
     dog = gltf.scene
     german = gltf2.scene
     terrier = gltf3.scene
@@ -700,8 +699,14 @@ const loadDog = async () => {
         ? positions.mobile
         : positions.desktop
 
+        aboutSection.classList.remove('about-loading')
         createScrollAnimation(responsive)
         ScrollTrigger.refresh()
+        window.requestAnimationFrame(() => {
+          document
+            .querySelector('.about-loader')
+            ?.classList.add('is-ready')
+        })
       }
     )
   } catch (e) {
@@ -745,17 +750,12 @@ let resizeTimer
 let lastWidth = window.innerWidth
 window.addEventListener('resize', () => {
   const newWidth = window.innerWidth
-
   if (newWidth === lastWidth) return
-
   lastWidth = newWidth
-
   sizes.width = aboutSection.clientWidth
   sizes.height = aboutSection.clientHeight
-
   camera.aspect = sizes.width / sizes.height
   camera.updateProjectionMatrix()
-
   renderer.setSize(
     sizes.width,
     sizes.height
