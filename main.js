@@ -699,7 +699,6 @@ const loadDog = async () => {
         ? positions.mobile
         : positions.desktop
 
-        aboutSection.classList.remove('about-loading')
         createScrollAnimation(responsive)
         ScrollTrigger.refresh()
         window.requestAnimationFrame(() => {
@@ -774,16 +773,30 @@ window.addEventListener('resize', () => {
 window.addEventListener('load', () => {
   ScrollTrigger.refresh()
 })
+let isAboutVisible = false
+
 const animate = () => {
-  camera.lookAt(
-    cameraTarget.x,
-    cameraTarget.y,
-    cameraTarget.z
-  )
-  renderer.render(scene, camera)
+  if (isAboutVisible) {
+    camera.lookAt(
+      cameraTarget.x,
+      cameraTarget.y,
+      cameraTarget.z
+    )
+    renderer.render(scene, camera)
+  }
   window.requestAnimationFrame(animate)
 }
 animate()
+const aboutObserver = new window.IntersectionObserver(
+  ([entry]) => {
+    isAboutVisible = entry.isIntersecting
+  },
+  {
+    rootMargin: '100% 0px 100% 0px'
+  }
+)
+
+aboutObserver.observe(aboutSection)
 
 /* PRODUCTS ANIMATION */
 gsap.set('.products li', { xPercent: 400, opacity: 0, scale: 0 })
