@@ -89,7 +89,7 @@ header {
   height: clamp(200px, 26vw, 600px);
   margin: 8px;
   position: absolute;
-  background: url("Mainly-images/fifth-img.jpg");
+  background: url("/Velpet/Mainly-images/fifth-img.jpg");
   background-size: cover;
   background-position: start;
   border-radius: 10px;
@@ -639,7 +639,7 @@ h1 {
   z-index: -1;
   background:
     linear-gradient(rgba(6, 72, 63, 0.35), rgba(24, 171, 151, 0.55)),
-    url("Mainly-images/Velpet-imagen.png");
+    url("/Velpet/Mainly-images/Velpet-imagen.png");
   filter: blur(5px);
 }
 .stage {
