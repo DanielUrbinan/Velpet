@@ -742,19 +742,31 @@ renderer.setPixelRatio(
 )
 
 let resizeTimer
+let lastWidth = window.innerWidth
 window.addEventListener('resize', () => {
+  const newWidth = window.innerWidth
+
+  if (newWidth === lastWidth) return
+
+  lastWidth = newWidth
+
   sizes.width = aboutSection.clientWidth
   sizes.height = aboutSection.clientHeight
+
   camera.aspect = sizes.width / sizes.height
   camera.updateProjectionMatrix()
+
   renderer.setSize(
     sizes.width,
     sizes.height
   )
+
   renderer.setPixelRatio(
     Math.min(window.devicePixelRatio, 2)
   )
+
   clearTimeout(resizeTimer)
+
   resizeTimer = setTimeout(() => {
     ScrollTrigger.refresh()
   }, 200)
