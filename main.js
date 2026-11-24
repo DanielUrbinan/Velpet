@@ -85,171 +85,172 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* -----3d element--------- */
 const canva = document.querySelector('.about-webg1')
-const scene = new THREE.Scene()
-const loader = new GLTFLoader()
-const aboutSection = document.getElementById('about-desktop')
-const sizes = {
-  width: aboutSection.clientWidth,
-  height: aboutSection.clientHeight
-}
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
-const cameraTarget = {
-  x: 0,
-  y: 0,
-  z: 0
-}
-
-const text = document.querySelectorAll('.text')
-const title = document.querySelectorAll('.title')
-const bg_fs = document.querySelectorAll('.finalScene-bg')
-
-const positions = {
-  desktop: {
-    // scene 1
-    cameraScene1ZF: 6,
-    cameraScene1ZE: 2.5,
-    // scene 2
-    dogStartX: -0.2,
-    dogStartY: 0,
-    cameraStartZ: 2.5,
-
-    // scene 3
-    dogScene3X: -0.8,
-    dogScene3Y: -0.5,
-    dogScene3Z: 0.9,
-    // scene 4
-    dogScene4X: 0.08,
-    dogScene4YF: -0.5,
-    dogScene4YE: 2,
-    dogScene4Z: 1.5,
-    germanScene4XF: -0.6,
-    germanScene4YF: -0.5,
-    germanScene4XE: 0.6,
-    germanScene4YE: -0.5,
-    germanScene4Z: 0.5,
-    // Final Scene
-    germanScene5XF: 0.9,
-    germanScene5YF: -0.5,
-    germanScene5YZ: 0.1,
-    dogScene5YF: -0.40,
-    dogScene5XF: 1.4,
-    dogScene5ZF: 0.9,
-    dogScene5RotationY: Math.PI * -0.50,
-    dogScene5RotationX: Math.PI * -0.05,
-    terrierScene5XF: 1.1,
-    terrierScene5ZF: 0.2,
-    terrierScene5YF: -0.5
-  },
-  mobile: {
-    // scene 1
-    cameraScene1ZF: 6,
-    cameraScene1ZE: 3,
-    // scene 2
-    dogStartX: -0.2,
-    dogStartY: 0,
-    cameraStartZ: 2.5,
-
-    // scene 3
-    dogScene3X: -0.8,
-    dogScene3Y: -0.5,
-    dogScene3Z: 1.2,
-    // scene 4
-    dogScene4X: 0.08,
-    dogScene4YF: -0.5,
-    dogScene4YE: 2,
-    dogScene4Z: 1.5,
-    germanScene4XF: -0.6,
-    germanScene4YF: -0.5,
-    germanScene4XE: 0.7,
-    germanScene4YE: -0.5,
-    germanScene4Z: 0.2,
-    // Final Scene
-    germanScene5XF: 0.8,
-    germanScene5YF: -0.5,
-    germanScene5YZ: 0.1,
-    dogScene5YF: -0.05,
-    dogScene5XF: 0.95,
-    dogScene5ZF: 0.1,
-    dogScene5RotationY: Math.PI * -0.30,
-    dogScene5RotationX: Math.PI * 0.05,
-    terrierScene5XF: 1.1,
-    terrierScene5ZF: 0.2
+const initDesktopAbout = () => {
+  const scene = new THREE.Scene()
+  const loader = new GLTFLoader()
+  const aboutSection = document.getElementById('about-desktop')
+  const sizes = {
+    width: aboutSection.clientWidth,
+    height: aboutSection.clientHeight
   }
-}
+  const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
+  const cameraTarget = {
+    x: 0,
+    y: 0,
+    z: 0
+  }
 
-const createScrollAnimation = (responsive) => {
-  // RESET INITIAL 3D STATE
-  dog.position.set(0, 0, 0)
-  dog.rotation.set(
-    Math.PI * 0.2,
-    Math.PI * 1.3,
-    0
-  )
-  camera.position.z = responsive.cameraScene1ZF
-  dogMaterials.forEach(material => {
-    material.opacity = 1
-  })
-  germanMaterials.forEach(material => {
-    material.opacity = 0
-  })
-  terrierMaterials.forEach(material => {
-    material.opacity = 0
-  })
-  dog.visible = true
-  german.visible = false
-  terrier.visible = false
-  const revealTimeline = gsap.timeline({
-    scrollTrigger: {
-      trigger: '#about-desktop',
-      start: 'top bottom',
-      end: 'top 5%',
-      scrub: 0.5,
-      invalidateOnRefresh: true
-    }
-  })
-  // about velpet reveal
-  revealTimeline.to(dog.rotation, {
-    y: Math.PI * -0.1,
-    x: Math.PI * 0,
-    ease: 'sine.inOut'
-  }, 0)
-  revealTimeline.to(camera.position,
-    {
-      z: responsive.cameraScene1ZE,
-      ease: 'sine.inOut'
-    }, 0
-  )
-  // about me continue animation
-  const aboutTimeline = gsap.timeline({
-    scrollTrigger: {
-      trigger: '#about-desktop',
-      start: 'top top',
-      end: '+=3000',
-      scrub: 2,
-      pin: true,
-      invalidateOnRefresh: true
-    }
-  })
-  aboutTimeline.addLabel('scene2')
-  aboutTimeline.to(dog.position, {
-    x: responsive.dogStartX,
-    ease: 'none'
-  }, 'scene2')
+  const text = document.querySelectorAll('.text')
+  const title = document.querySelectorAll('.title')
+  const bg_fs = document.querySelectorAll('.finalScene-bg')
 
-  aboutTimeline.fromTo(
-    text[0],
-    {
-      opacity: 0,
-      yPercent: 10,
-      lineHeight: 1.4
+  const positions = {
+    desktop: {
+    // scene 1
+      cameraScene1ZF: 6,
+      cameraScene1ZE: 2.5,
+      // scene 2
+      dogStartX: -0.2,
+      dogStartY: 0,
+      cameraStartZ: 2.5,
+
+      // scene 3
+      dogScene3X: -0.8,
+      dogScene3Y: -0.5,
+      dogScene3Z: 0.9,
+      // scene 4
+      dogScene4X: 0.08,
+      dogScene4YF: -0.5,
+      dogScene4YE: 2,
+      dogScene4Z: 1.5,
+      germanScene4XF: -0.6,
+      germanScene4YF: -0.5,
+      germanScene4XE: 0.6,
+      germanScene4YE: -0.5,
+      germanScene4Z: 0.5,
+      // Final Scene
+      germanScene5XF: 0.9,
+      germanScene5YF: -0.5,
+      germanScene5YZ: 0.1,
+      dogScene5YF: -0.40,
+      dogScene5XF: 1.4,
+      dogScene5ZF: 0.9,
+      dogScene5RotationY: Math.PI * -0.50,
+      dogScene5RotationX: Math.PI * -0.05,
+      terrierScene5XF: 1.1,
+      terrierScene5ZF: 0.2,
+      terrierScene5YF: -0.5
     },
-    {
-      opacity: 1,
-      yPercent: 0,
-      lineHeight: 1.2
-    }, 'scene2'
-  )
-  /* aboutTimeline.to('.bg-shape-1', {
+    mobile: {
+    // scene 1
+      cameraScene1ZF: 6,
+      cameraScene1ZE: 3,
+      // scene 2
+      dogStartX: -0.2,
+      dogStartY: 0,
+      cameraStartZ: 2.5,
+
+      // scene 3
+      dogScene3X: -0.8,
+      dogScene3Y: -0.5,
+      dogScene3Z: 1.2,
+      // scene 4
+      dogScene4X: 0.08,
+      dogScene4YF: -0.5,
+      dogScene4YE: 2,
+      dogScene4Z: 1.5,
+      germanScene4XF: -0.6,
+      germanScene4YF: -0.5,
+      germanScene4XE: 0.7,
+      germanScene4YE: -0.5,
+      germanScene4Z: 0.2,
+      // Final Scene
+      germanScene5XF: 0.8,
+      germanScene5YF: -0.5,
+      germanScene5YZ: 0.1,
+      dogScene5YF: -0.05,
+      dogScene5XF: 0.95,
+      dogScene5ZF: 0.1,
+      dogScene5RotationY: Math.PI * -0.30,
+      dogScene5RotationX: Math.PI * 0.05,
+      terrierScene5XF: 1.1,
+      terrierScene5ZF: 0.2
+    }
+  }
+
+  const createScrollAnimation = (responsive) => {
+  // RESET INITIAL 3D STATE
+    dog.position.set(0, 0, 0)
+    dog.rotation.set(
+      Math.PI * 0.2,
+      Math.PI * 1.3,
+      0
+    )
+    camera.position.z = responsive.cameraScene1ZF
+    dogMaterials.forEach(material => {
+      material.opacity = 1
+    })
+    germanMaterials.forEach(material => {
+      material.opacity = 0
+    })
+    terrierMaterials.forEach(material => {
+      material.opacity = 0
+    })
+    dog.visible = true
+    german.visible = false
+    terrier.visible = false
+    const revealTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#about-desktop',
+        start: 'top bottom',
+        end: 'top 5%',
+        scrub: 0.5,
+        invalidateOnRefresh: true
+      }
+    })
+    // about velpet reveal
+    revealTimeline.to(dog.rotation, {
+      y: Math.PI * -0.1,
+      x: Math.PI * 0,
+      ease: 'sine.inOut'
+    }, 0)
+    revealTimeline.to(camera.position,
+      {
+        z: responsive.cameraScene1ZE,
+        ease: 'sine.inOut'
+      }, 0
+    )
+    // about me continue animation
+    const aboutTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#about-desktop',
+        start: 'top top',
+        end: '+=3000',
+        scrub: 2,
+        pin: true,
+        invalidateOnRefresh: true
+      }
+    })
+    aboutTimeline.addLabel('scene2')
+    aboutTimeline.to(dog.position, {
+      x: responsive.dogStartX,
+      ease: 'none'
+    }, 'scene2')
+
+    aboutTimeline.fromTo(
+      text[0],
+      {
+        opacity: 0,
+        yPercent: 10,
+        lineHeight: 1.4
+      },
+      {
+        opacity: 1,
+        yPercent: 0,
+        lineHeight: 1.2
+      }, 'scene2'
+    )
+    /* aboutTimeline.to('.bg-shape-1', {
     opacity: 0.18,
     xPercent: 15,
     scale: 1.1,
@@ -262,543 +263,539 @@ const createScrollAnimation = (responsive) => {
     scale: 1.15,
     ease: 'none'
   }, 'scene2') */
-  aboutTimeline.addLabel('scene3')
-  aboutTimeline.to('.paw-1', {
-    x: -300,
-    y: -150,
-    rotation: -100,
-    opacity: 0,
-    ease: 'power2.in'
-  }, 'scene3')
-
-  aboutTimeline.to('.paw-2', {
-    x: 300,
-    y: -150,
-    rotation: 100,
-    opacity: 0,
-    ease: 'power2.in'
-  }, 'scene3')
-
-  aboutTimeline.to('.paw-3', {
-    x: -300,
-    y: 150,
-    rotation: -80,
-    opacity: 0,
-    ease: 'power2.in'
-  }, 'scene3')
-
-  aboutTimeline.to('.paw-4', {
-    x: 300,
-    y: 150,
-    rotation: 80,
-    opacity: 0,
-    ease: 'power2.in'
-  }, 'scene3')
-  aboutTimeline.to('.bone-1', {
-    x: -350,
-    rotation: -220,
-    opacity: 0,
-    ease: 'power2.in'
-  }, 'scene3+=0.05')
-
-  aboutTimeline.to('.bone-2', {
-    x: 350,
-    rotation: 220,
-    opacity: 0,
-    ease: 'power2.in'
-  }, 'scene3+=0.05')
-  aboutTimeline.to('.ball-1', {
-    x: -400,
-    y: 100,
-    rotation: -540,
-    opacity: 0,
-    ease: 'power2.in'
-  }, 'scene3+=0.08')
-  aboutTimeline.to('.title-1', {
-    yPercent: -40,
-    opacity: 0,
-    ease: 'power2.out'
-  }, 'scene3')
-  aboutTimeline.to('.ball-2', {
-    x: 400,
-    y: 100,
-    rotation: 540,
-    opacity: 0,
-    ease: 'power2.in'
-  }, 'scene3+=0.08')
-  aboutTimeline.to('.about-fx', {
-    scale: 4,
-    ease: 'power2.inOut'
-  }, 'scene3+=0.10')
-  aboutTimeline.to(
-    text[0],
-    {
+    aboutTimeline.addLabel('scene3')
+    aboutTimeline.to('.paw-1', {
+      x: -300,
+      y: -150,
+      rotation: -100,
       opacity: 0,
-      yPercent: -20,
-      ease: 'back.out'
-    }, 'scene3-=0.03'
-  )
-  // figure changed
-  aboutTimeline.to(dog.rotation, {
-    y: Math.PI * 0.3
-  }, 'scene3')
-  aboutTimeline.to(dog.position, {
-    y: responsive.dogScene3Y,
-    x: responsive.dogScene3X
-  }, 'scene3+=0.03')
+      ease: 'power2.in'
+    }, 'scene3')
 
-  aboutTimeline.to(camera.position, {
-    z: responsive.dogScene3Z
-  }, 'scene3')
+    aboutTimeline.to('.paw-2', {
+      x: 300,
+      y: -150,
+      rotation: 100,
+      opacity: 0,
+      ease: 'power2.in'
+    }, 'scene3')
 
-  aboutTimeline.fromTo(text[1],
-    {
+    aboutTimeline.to('.paw-3', {
+      x: -300,
+      y: 150,
+      rotation: -80,
       opacity: 0,
-      yPercent: 10,
-      lineHeight: 1.4
-    },
-    {
-      opacity: 1,
-      yPercent: 0,
-      lineHeight: 1.2,
-      ease: 'power1.out'
-    }, 'scene3+=0.2')
-  aboutTimeline.fromTo(
-    title[1], {
+      ease: 'power2.in'
+    }, 'scene3')
+
+    aboutTimeline.to('.paw-4', {
+      x: 300,
+      y: 150,
+      rotation: 80,
       opacity: 0,
-      yPercent: 30,
-      scale: 0.94
-    }, {
-      opacity: 1,
-      yPercent: 0,
-      scale: 1,
+      ease: 'power2.in'
+    }, 'scene3')
+    aboutTimeline.to('.bone-1', {
+      x: -350,
+      rotation: -220,
+      opacity: 0,
+      ease: 'power2.in'
+    }, 'scene3+=0.05')
+
+    aboutTimeline.to('.bone-2', {
+      x: 350,
+      rotation: 220,
+      opacity: 0,
+      ease: 'power2.in'
+    }, 'scene3+=0.05')
+    aboutTimeline.to('.ball-1', {
+      x: -400,
+      y: 100,
+      rotation: -540,
+      opacity: 0,
+      ease: 'power2.in'
+    }, 'scene3+=0.08')
+    aboutTimeline.to('.title-1', {
+      yPercent: -40,
+      opacity: 0,
       ease: 'power2.out'
-    }, 'scene3+=0.20'
-  )
-  aboutTimeline.addLabel('scene4')
+    }, 'scene3')
+    aboutTimeline.to('.ball-2', {
+      x: 400,
+      y: 100,
+      rotation: 540,
+      opacity: 0,
+      ease: 'power2.in'
+    }, 'scene3+=0.08')
+    aboutTimeline.to('.about-fx', {
+      scale: 4,
+      ease: 'power2.inOut'
+    }, 'scene3+=0.10')
+    aboutTimeline.to(
+      text[0],
+      {
+        opacity: 0,
+        yPercent: -20,
+        ease: 'back.out'
+      }, 'scene3-=0.03'
+    )
+    // figure changed
+    aboutTimeline.to(dog.rotation, {
+      y: Math.PI * 0.3
+    }, 'scene3')
+    aboutTimeline.to(dog.position, {
+      y: responsive.dogScene3Y,
+      x: responsive.dogScene3X
+    }, 'scene3+=0.03')
 
-  aboutTimeline.to('.scene3-bg', {
-    scale: 30,
-    ease: 'power2.inOut'
-  }, 'scene4')
-  aboutTimeline.fromTo(
-    title[2],
-    {
+    aboutTimeline.to(camera.position, {
+      z: responsive.dogScene3Z
+    }, 'scene3')
+
+    aboutTimeline.fromTo(text[1],
+      {
+        opacity: 0,
+        yPercent: 10,
+        lineHeight: 1.4
+      },
+      {
+        opacity: 1,
+        yPercent: 0,
+        lineHeight: 1.2,
+        ease: 'power1.out'
+      }, 'scene3+=0.2')
+    aboutTimeline.fromTo(
+      title[1], {
+        opacity: 0,
+        yPercent: 30,
+        scale: 0.94
+      }, {
+        opacity: 1,
+        yPercent: 0,
+        scale: 1,
+        ease: 'power2.out'
+      }, 'scene3+=0.20'
+    )
+    aboutTimeline.addLabel('scene4')
+
+    aboutTimeline.to('.scene3-bg', {
+      scale: 30,
+      ease: 'power2.inOut'
+    }, 'scene4')
+    aboutTimeline.fromTo(
+      title[2],
+      {
+        opacity: 0,
+        scale: 0.90,
+        xPercent: 20
+      },
+      {
+        opacity: 1,
+        scale: 1,
+        xPercent: 0
+      }, 'scene4+=0.10'
+    )
+    aboutTimeline.to(
+      title[1],
+      {
+        opacity: 0,
+        yPercent: -30,
+        zIndex: -1,
+        ease: 'back.out'
+      }, 'scene4-=0.03'
+    )
+    aboutTimeline.to(
+      text[1],
+      {
+        opacity: 0,
+        yPercent: -20,
+        zIndex: -1,
+        ease: 'back.out'
+      }, 'scene4-=0.03'
+    )
+    aboutTimeline.to(dog.rotation, {
+      y: Math.PI * 0.001
+    }, 'scene4')
+    aboutTimeline.to(camera.position, {
+      z: responsive.dogScene4Z
+    }, 'scene4')
+    aboutTimeline.to(dog.position, {
+      x: responsive.dogScene4X
+    }, 'scene4')
+    aboutTimeline.to(dogMaterials, {
       opacity: 0,
-      scale: 0.90,
-      xPercent: 20
-    },
-    {
-      opacity: 1,
-      scale: 1,
-      xPercent: 0
-    }, 'scene4+=0.10'
-  )
-  aboutTimeline.to(
-    title[1],
-    {
-      opacity: 0,
-      yPercent: -30,
-      zIndex: -1,
-      ease: 'back.out'
-    }, 'scene4-=0.03'
-  )
-  aboutTimeline.to(
-    text[1],
-    {
-      opacity: 0,
-      yPercent: -20,
-      zIndex: -1,
-      ease: 'back.out'
-    }, 'scene4-=0.03'
-  )
-  aboutTimeline.to(dog.rotation, {
-    y: Math.PI * 0.001
-  }, 'scene4')
-  aboutTimeline.to(camera.position, {
-    z: responsive.dogScene4Z
-  }, 'scene4')
-  aboutTimeline.to(dog.position, {
-    x: responsive.dogScene4X
-  }, 'scene4')
-  aboutTimeline.to(dogMaterials, {
-    opacity: 0,
-    ease: 'back.inOut'
-  }, 'scene4-=0.2')
-  aboutTimeline.set(
-    german, { visible: true }, 'scene4-=0.2'
-  )
-  aboutTimeline.to(
-    germanMaterials, {
-      opacity: 1,
       ease: 'back.inOut'
-    }, 'scene4-=0.12'
-  )
-  // DRAG THE DOG TO THE RIGHT
-  aboutTimeline.to(dog.rotation, {
-    y: Math.PI * -0.35,
-    x: Math.PI * -0.10,
-    ease: 'none'
-  }, 'scene4+=0.4')
-  aboutTimeline.to(dog.position,
-    { x: responsive.dogScene4YE }, 'scene4+=0.4'
-  )
-  aboutTimeline.fromTo(german.rotation,
-    {
-      y: Math.PI * 0.26,
-      x: Math.PI * -0.10
-    },
-    {
-      y: Math.PI * -0.25,
+    }, 'scene4-=0.2')
+    aboutTimeline.set(
+      german, { visible: true }, 'scene4-=0.2'
+    )
+    aboutTimeline.to(
+      germanMaterials, {
+        opacity: 1,
+        ease: 'back.inOut'
+      }, 'scene4-=0.12'
+    )
+    // DRAG THE DOG TO THE RIGHT
+    aboutTimeline.to(dog.rotation, {
+      y: Math.PI * -0.35,
       x: Math.PI * -0.10,
       ease: 'none'
-    }, 'scene4'
-  )
-  aboutTimeline.fromTo(
-    german.position, { x: responsive.germanScene4XF, y: responsive.germanScene4YF }, { y: responsive.germanScene4YE, x: responsive.germanScene4XE, ease: 'none' }, 'scene4')
-
-  aboutTimeline.to(
-    german.position, {
-      z: responsive.germanScene4Z
-    }, 'scene4+=0.10'
-  )
-  aboutTimeline.fromTo(
-    text[2], {
-      opacity: 0,
-      yPercent: 10,
-      lineHeight: 1.4
-    },
-    {
-      opacity: 1,
-      yPercent: 0,
-      lineHeight: 1.2
-    }, 'scene4+=0.40'
-  )
-  aboutTimeline.addLabel('finalScene')
-  aboutTimeline.fromTo(
-    bg_fs[0], {
-      opacity: 0,
-      scale: 0.90,
-      xPercent: 100
-    },
-    {
-      opacity: 1,
-      xPercent: 0,
-      scale: 1
-    }, 'finalScene'
-  )
-  aboutTimeline.fromTo(
-    bg_fs[1], {
-      opacity: 0,
-      scale: 0.90,
-      xPercent: 100
-    },
-    {
-      opacity: 1,
-      xPercent: 0,
-      scale: 1
-    }, 'finalScene+=0.10'
-  )
-  aboutTimeline.fromTo(
-    bg_fs[2], {
-      opacity: 0,
-      scale: 0.90,
-      xPercent: 100
-    },
-    {
-      opacity: 1,
-      xPercent: 0,
-      scale: 1
-    }, 'finalScene+=0.15'
-  )
-  aboutTimeline.fromTo(
-    '.title-4 h2',
-    {
-      xPercent: -110,
-      opacity: 0
-    },
-    {
-      xPercent: 0,
-      opacity: 1,
-      ease: 'power3.out'
-    },
-    'finalScene+=0.15'
-  )
-
-  aboutTimeline.fromTo(
-    '.title-4 span',
-    {
-      yPercent: 120,
-      opacity: 0
-    },
-    {
-      yPercent: 0,
-      opacity: 1,
-      ease: 'power2.out'
-    },
-    'finalScene+=0.28'
-  )
-
-  aboutTimeline.to(
-    title[2], {
-      xPercent: -20,
-      opacity: 0,
-      ease: 'back.inOut'
-    }, 'finalScene'
-  )
-  aboutTimeline.to(
-    text[2], {
-      xPercent: -20,
-      opacity: 0,
-      ease: 'back.inOut'
-    }, 'finalScene'
-  )
-  aboutTimeline.to(
-    german.position, {
-      x: responsive.germanScene5XF,
-      y: responsive.germanScene5YF,
-      z: responsive.germanScene5YZ
-    }, 'finalScene'
-  )
-  aboutTimeline.to(
-    german.rotation, {
-      y: Math.PI * -0.30,
-      x: Math.PI * -0.05
-    }, 'finalScene'
-  )
-  aboutTimeline.to(
-    dog.position, {
-      y: responsive.dogScene5YF,
-      x: responsive.dogScene5XF,
-      z: responsive.dogScene5ZF
-    }, 'finalScene'
-  )
-  aboutTimeline.to(
-    dog.rotation, {
-      y: responsive.dogScene5RotationY,
-      x: responsive.dogScene5RotationX
-    }, 'finalScene'
-  )
-
-  aboutTimeline.to(
-    dogMaterials, {
-      opacity: 1
-    }, 'finalScene'
-  )
-  aboutTimeline.to(
-    terrier.position, {
-      x: responsive.terrierScene5XF,
-      z: responsive.terrierScene5ZF,
-      y: responsive.terrierScene5YF
-    }, 'finalScene-=0.02'
-  )
-  aboutTimeline.to(
-    terrier.rotation, {
-      y: Math.PI * 1.15
-    }, 'finalScene'
-  )
-  aboutTimeline.set(
-    terrier, {
-      visible: true
-    }, 'finalScene-=0.3'
-  )
-  aboutTimeline.fromTo(
-    terrierMaterials,
-    { opacity: 0 },
-    {
-      opacity: 1,
-      ease: 'back.in'
-    }, 'finalScene-=0.2'
-  )
-}
-
-let dog
-let german
-let terrier
-
-const dogMaterials = []
-const germanMaterials = []
-const terrierMaterials = []
-
-const loadDog = async () => {
-  try {
-    const base = import.meta.env.BASE_URL
-
-    const [gltf, gltf2, gltf3] = await Promise.all([loader.loadAsync(
-      `${base}Models/dog/source/model.glb`
-    ), loader.loadAsync(
-      `${base}Models/german/source/model.glb`
-    ), loader.loadAsync(
-      `${base}Models/terrier/source/scene 14.glb`
-    )])
-    dog = gltf.scene
-    german = gltf2.scene
-    terrier = gltf3.scene
-    dog.traverse((child) => {
-      if (child.isMesh) {
-        child.material.transparent = true
-        child.material.depthWrite = false
-        child.renderOrder = 3
-        dogMaterials.push(child.material)
-      }
-    })
-
-    german.traverse((child) => {
-      if (child.isMesh) {
-        child.material.transparent = true
-        child.material.depthWrite = false
-        child.renderOrder = 1
-        germanMaterials.push(child.material)
-      }
-    })
-    terrier.traverse((child) => {
-      if (child.isMesh) {
-        const oldMaterial = child.material
-
-        child.material = new THREE.MeshStandardMaterial({
-          map: oldMaterial.map,
-          transparent: true,
-          opacity: oldMaterial.opacity
-        })
-
-        child.material.depthWrite = false
-        child.renderOrder = 2
-
-        terrierMaterials.push(child.material)
-      }
-    })
-    const terrierLight = new THREE.PointLight(
-      0xffffff,
-      60,
-      60
+    }, 'scene4+=0.4')
+    aboutTimeline.to(dog.position,
+      { x: responsive.dogScene4YE }, 'scene4+=0.4'
     )
-
-    terrierLight.position.set(0, 1, 2)
-
-    terrier.add(terrierLight)
-
-    terrier.rotation.y = Math.PI
-    terrier.position.y = -0.5
-    germanMaterials.forEach((material) => {
-      material.opacity = 0
-    })
-    terrierMaterials.forEach(material => {
-      material.opacity = 0
-    })
-
-    scene.add(dog)
-    scene.add(german)
-    scene.add(terrier)
-
-    // eslint-disable-next-line no-unused-vars
-    const box = new THREE.Box3().setFromObject(dog)
-    // eslint-disable-next-line no-unused-vars
-    const box2 = new THREE.Box3().setFromObject(german)
-    const box3 = new THREE.Box3().setFromObject(terrier)
-    const mm = gsap.matchMedia()
-
-    mm.add(
+    aboutTimeline.fromTo(german.rotation,
       {
-        desktop: '(min-width: 701px)',
-        mobile: '(max-width: 700px)'
+        y: Math.PI * 0.26,
+        x: Math.PI * -0.10
       },
-
-      (context) => {
-        const { mobile } = context.conditions
-
-        const responsive =
-      mobile
-        ? positions.mobile
-        : positions.desktop
-
-        createScrollAnimation(responsive)
-        ScrollTrigger.refresh()
-        window.requestAnimationFrame(() => {
-          document
-            .querySelector('.about-loader')
-            ?.classList.add('is-ready')
-        })
-      }
+      {
+        y: Math.PI * -0.25,
+        x: Math.PI * -0.10,
+        ease: 'none'
+      }, 'scene4'
     )
-  } catch (e) {
-    console.log('Error loading dog', e)
+    aboutTimeline.fromTo(
+      german.position, { x: responsive.germanScene4XF, y: responsive.germanScene4YF }, { y: responsive.germanScene4YE, x: responsive.germanScene4XE, ease: 'none' }, 'scene4')
+
+    aboutTimeline.to(
+      german.position, {
+        z: responsive.germanScene4Z
+      }, 'scene4+=0.10'
+    )
+    aboutTimeline.fromTo(
+      text[2], {
+        opacity: 0,
+        yPercent: 10,
+        lineHeight: 1.4
+      },
+      {
+        opacity: 1,
+        yPercent: 0,
+        lineHeight: 1.2
+      }, 'scene4+=0.40'
+    )
+    aboutTimeline.addLabel('finalScene')
+    aboutTimeline.fromTo(
+      bg_fs[0], {
+        opacity: 0,
+        scale: 0.90,
+        xPercent: 100
+      },
+      {
+        opacity: 1,
+        xPercent: 0,
+        scale: 1
+      }, 'finalScene'
+    )
+    aboutTimeline.fromTo(
+      bg_fs[1], {
+        opacity: 0,
+        scale: 0.90,
+        xPercent: 100
+      },
+      {
+        opacity: 1,
+        xPercent: 0,
+        scale: 1
+      }, 'finalScene+=0.10'
+    )
+    aboutTimeline.fromTo(
+      bg_fs[2], {
+        opacity: 0,
+        scale: 0.90,
+        xPercent: 100
+      },
+      {
+        opacity: 1,
+        xPercent: 0,
+        scale: 1
+      }, 'finalScene+=0.15'
+    )
+    aboutTimeline.fromTo(
+      '.title-4 h2',
+      {
+        xPercent: -110,
+        opacity: 0
+      },
+      {
+        xPercent: 0,
+        opacity: 1,
+        ease: 'power3.out'
+      },
+      'finalScene+=0.15'
+    )
+
+    aboutTimeline.fromTo(
+      '.title-4 span',
+      {
+        yPercent: 120,
+        opacity: 0
+      },
+      {
+        yPercent: 0,
+        opacity: 1,
+        ease: 'power2.out'
+      },
+      'finalScene+=0.28'
+    )
+
+    aboutTimeline.to(
+      title[2], {
+        xPercent: -20,
+        opacity: 0,
+        ease: 'back.inOut'
+      }, 'finalScene'
+    )
+    aboutTimeline.to(
+      text[2], {
+        xPercent: -20,
+        opacity: 0,
+        ease: 'back.inOut'
+      }, 'finalScene'
+    )
+    aboutTimeline.to(
+      german.position, {
+        x: responsive.germanScene5XF,
+        y: responsive.germanScene5YF,
+        z: responsive.germanScene5YZ
+      }, 'finalScene'
+    )
+    aboutTimeline.to(
+      german.rotation, {
+        y: Math.PI * -0.30,
+        x: Math.PI * -0.05
+      }, 'finalScene'
+    )
+    aboutTimeline.to(
+      dog.position, {
+        y: responsive.dogScene5YF,
+        x: responsive.dogScene5XF,
+        z: responsive.dogScene5ZF
+      }, 'finalScene'
+    )
+    aboutTimeline.to(
+      dog.rotation, {
+        y: responsive.dogScene5RotationY,
+        x: responsive.dogScene5RotationX
+      }, 'finalScene'
+    )
+
+    aboutTimeline.to(
+      dogMaterials, {
+        opacity: 1
+      }, 'finalScene'
+    )
+    aboutTimeline.to(
+      terrier.position, {
+        x: responsive.terrierScene5XF,
+        z: responsive.terrierScene5ZF,
+        y: responsive.terrierScene5YF
+      }, 'finalScene-=0.02'
+    )
+    aboutTimeline.to(
+      terrier.rotation, {
+        y: Math.PI * 1.15
+      }, 'finalScene'
+    )
+    aboutTimeline.set(
+      terrier, {
+        visible: true
+      }, 'finalScene-=0.3'
+    )
+    aboutTimeline.fromTo(
+      terrierMaterials,
+      { opacity: 0 },
+      {
+        opacity: 1,
+        ease: 'back.in'
+      }, 'finalScene-=0.2'
+    )
   }
-}
 
-loadDog()
+  let dog
+  let german
+  let terrier
 
-camera.position.z = 2.4
-scene.add(camera)
+  const dogMaterials = []
+  const germanMaterials = []
+  const terrierMaterials = []
 
-const ambientLight = new THREE.AmbientLight(
-  0xffffff,
-  0.8
-)
+  const loadDog = async () => {
+    try {
+      const base = import.meta.env.BASE_URL
 
-scene.add(ambientLight)
-const directionalLight = new THREE.DirectionalLight(
-  0xffffff,
-  3
-)
+      const [gltf, gltf2, gltf3] = await Promise.all([loader.loadAsync(
+      `${base}Models/dog/source/model.glb`
+      ), loader.loadAsync(
+      `${base}Models/german/source/model.glb`
+      ), loader.loadAsync(
+      `${base}Models/terrier/source/scene 14.glb`
+      )])
+      dog = gltf.scene
+      german = gltf2.scene
+      terrier = gltf3.scene
+      dog.traverse((child) => {
+        if (child.isMesh) {
+          child.material.transparent = true
+          child.material.depthWrite = false
+          child.renderOrder = 3
+          dogMaterials.push(child.material)
+        }
+      })
 
-directionalLight.position.set(-2, 3, 4)
+      german.traverse((child) => {
+        if (child.isMesh) {
+          child.material.transparent = true
+          child.material.depthWrite = false
+          child.renderOrder = 1
+          germanMaterials.push(child.material)
+        }
+      })
+      terrier.traverse((child) => {
+        if (child.isMesh) {
+          const oldMaterial = child.material
 
-scene.add(directionalLight)
-const renderer = new THREE.WebGLRenderer({
-  canvas: canva,
-  alpha: true
-})
-renderer.setClearColor(0x000000, 0)
-renderer.setSize(
-  sizes.width,
-  sizes.height
-)
-renderer.setPixelRatio(
-  Math.min(window.devicePixelRatio, 2)
-)
+          child.material = new THREE.MeshStandardMaterial({
+            map: oldMaterial.map,
+            transparent: true,
+            opacity: oldMaterial.opacity
+          })
 
-let resizeTimer
-let lastWidth = window.innerWidth
-window.addEventListener('resize', () => {
-  const newWidth = window.innerWidth
-  if (newWidth === lastWidth) return
-  lastWidth = newWidth
-  sizes.width = aboutSection.clientWidth
-  sizes.height = aboutSection.clientHeight
-  camera.aspect = sizes.width / sizes.height
-  camera.updateProjectionMatrix()
+          child.material.depthWrite = false
+          child.renderOrder = 2
+
+          terrierMaterials.push(child.material)
+        }
+      })
+      const terrierLight = new THREE.PointLight(
+        0xffffff,
+        60,
+        60
+      )
+
+      terrierLight.position.set(0, 1, 2)
+
+      terrier.add(terrierLight)
+
+      terrier.rotation.y = Math.PI
+      terrier.position.y = -0.5
+      germanMaterials.forEach((material) => {
+        material.opacity = 0
+      })
+      terrierMaterials.forEach(material => {
+        material.opacity = 0
+      })
+
+      scene.add(dog)
+      scene.add(german)
+      scene.add(terrier)
+
+      // eslint-disable-next-line no-unused-vars
+      const box = new THREE.Box3().setFromObject(dog)
+      // eslint-disable-next-line no-unused-vars
+      const box2 = new THREE.Box3().setFromObject(german)
+      const box3 = new THREE.Box3().setFromObject(terrier)
+      const mm = gsap.matchMedia()
+
+      createScrollAnimation(positions.desktop)
+      ScrollTrigger.refresh()
+      window.requestAnimationFrame(() => {
+        document
+          .querySelector('.about-loader')
+          ?.classList.add('is-ready')
+      })
+    } catch (e) {
+      console.log('Error loading dog', e)
+    }
+  }
+
+  loadDog()
+
+  camera.position.z = 2.4
+  scene.add(camera)
+
+  const ambientLight = new THREE.AmbientLight(
+    0xffffff,
+    0.8
+  )
+
+  scene.add(ambientLight)
+  const directionalLight = new THREE.DirectionalLight(
+    0xffffff,
+    3
+  )
+
+  directionalLight.position.set(-2, 3, 4)
+
+  scene.add(directionalLight)
+  const renderer = new THREE.WebGLRenderer({
+    canvas: canva,
+    alpha: true
+  })
+  renderer.setClearColor(0x000000, 0)
   renderer.setSize(
     sizes.width,
     sizes.height
   )
-
   renderer.setPixelRatio(
     Math.min(window.devicePixelRatio, 2)
   )
 
-  clearTimeout(resizeTimer)
-
-  resizeTimer = setTimeout(() => {
-    ScrollTrigger.refresh()
-  }, 200)
-})
-window.addEventListener('load', () => {
-  ScrollTrigger.refresh()
-})
-let isAboutVisible = false
-
-const animate = () => {
-  if (isAboutVisible) {
-    camera.lookAt(
-      cameraTarget.x,
-      cameraTarget.y,
-      cameraTarget.z
+  let resizeTimer
+  let lastWidth = window.innerWidth
+  window.addEventListener('resize', () => {
+    const newWidth = window.innerWidth
+    if (newWidth === lastWidth) return
+    lastWidth = newWidth
+    sizes.width = aboutSection.clientWidth
+    sizes.height = aboutSection.clientHeight
+    camera.aspect = sizes.width / sizes.height
+    camera.updateProjectionMatrix()
+    renderer.setSize(
+      sizes.width,
+      sizes.height
     )
-    renderer.render(scene, camera)
+
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, 2)
+    )
+
+    clearTimeout(resizeTimer)
+
+    resizeTimer = setTimeout(() => {
+      ScrollTrigger.refresh()
+    }, 200)
+  })
+  window.addEventListener('load', () => {
+    ScrollTrigger.refresh()
+  })
+  let isAboutVisible = false
+
+  const animate = () => {
+    if (isAboutVisible) {
+      camera.lookAt(
+        cameraTarget.x,
+        cameraTarget.y,
+        cameraTarget.z
+      )
+      renderer.render(scene, camera)
+    }
+    window.requestAnimationFrame(animate)
   }
-  window.requestAnimationFrame(animate)
+  animate()
+
+  const aboutObserver = new window.IntersectionObserver(
+    ([entry]) => {
+      isAboutVisible = entry.isIntersecting
+    },
+    {
+      rootMargin: '100% 0px 100% 0px'
+    }
+  )
+
+  aboutObserver.observe(aboutSection)
 }
-animate()
 const initMobileAbout = () => {
   const root = document.getElementById('about-mobile')
 
@@ -1133,7 +1130,9 @@ const initMobileAbout = () => {
     }
   )
 }
-if (window.matchMedia('(max-width: 700px)').matches) {
+if (window.matchMedia('(min-width: 701px)').matches) {
+  initDesktopAbout()
+} else {
   initMobileAbout()
 }
 /* PRODUCTS ANIMATION */
