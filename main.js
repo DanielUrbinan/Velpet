@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const canva = document.querySelector('.about-webg1')
 const scene = new THREE.Scene()
 const loader = new GLTFLoader()
-const aboutSection = document.getElementById('about')
+const aboutSection = document.getElementById('about-desktop')
 const sizes = {
   width: aboutSection.clientWidth,
   height: aboutSection.clientHeight
@@ -200,7 +200,7 @@ const createScrollAnimation = (responsive) => {
   terrier.visible = false
   const revealTimeline = gsap.timeline({
     scrollTrigger: {
-      trigger: '#about',
+      trigger: '#about-desktop',
       start: 'top bottom',
       end: 'top 5%',
       scrub: 0.5,
@@ -222,7 +222,7 @@ const createScrollAnimation = (responsive) => {
   // about me continue animation
   const aboutTimeline = gsap.timeline({
     scrollTrigger: {
-      trigger: '#about',
+      trigger: '#about-desktop',
       start: 'top top',
       end: '+=3000',
       scrub: 2,
@@ -799,17 +799,343 @@ const animate = () => {
   window.requestAnimationFrame(animate)
 }
 animate()
-const aboutObserver = new window.IntersectionObserver(
-  ([entry]) => {
-    isAboutVisible = entry.isIntersecting
-  },
-  {
-    rootMargin: '100% 0px 100% 0px'
-  }
-)
+const initMobileAbout = () => {
+  const root = document.getElementById('about-mobile')
 
-aboutObserver.observe(aboutSection)
+  if (!root) return
 
+  // All searches are restricted to #about-mobile
+  const $ = (selector, context = root) =>
+    gsap.utils.toArray(selector, context)
+
+  // Pause the tag sway when About isn't near the viewport
+  const observer = new window.IntersectionObserver(([entry]) => {
+    root.classList.toggle('is-off', !entry.isIntersecting)
+  })
+
+  observer.observe(root)
+
+  // Split mobile titles into words
+  $('.mobile-title h2').forEach(heading => {
+    heading.innerHTML = heading.textContent
+      .trim()
+  })
+
+  const mmMobile = gsap.matchMedia()
+
+  mmMobile.add(
+    {
+      mobile: '(max-width: 700px)',
+      motion: '(prefers-reduced-motion: no-preference)'
+    },
+    context => {
+      const { mobile, motion } = context.conditions
+
+      if (!mobile || !motion) return
+
+      const scenes = $('.mobile-scene')
+      const bgs = $('.mobile-bg')
+
+      const wrap = root.querySelector('.mobile-tag-wrap')
+      const tag = root.querySelector('.mobile-tag')
+      const eng = root.querySelector('.mobile-engrave')
+
+      const confs = $('.mobile-conf')
+
+      const words = scene =>
+        $('.mobile-w > span', scene)
+
+      const chips = number =>
+        $(`.mobile-k${number}`)
+
+      const hold = [1.6, 2.4, 1.6, 1.5]
+      const OUT = 0.4
+
+      const typed = { n: 0 }
+
+      gsap.set($('.mobile-chip'), {
+        xPercent: -50,
+        yPercent: -50
+      })
+
+      gsap.set(scenes[0], {
+        autoAlpha: 1
+      })
+
+      const pop = (timeline, elements, at) => {
+        timeline.fromTo(
+          elements,
+          {
+            autoAlpha: 0,
+            scale: 0,
+            z: -300,
+            rotation: -25
+          },
+          {
+            autoAlpha: 1,
+            scale: 1,
+            z: 0,
+            rotation: (i, element) => +element.dataset.r,
+            duration: 0.35,
+            stagger: 0.07,
+            ease: 'back.out(2)'
+          },
+          at
+        )
+      }
+
+      const unpop = (timeline, elements, at) => {
+        timeline.to(
+          elements,
+          {
+            autoAlpha: 0,
+            scale: 0.5,
+            z: 200,
+            duration: OUT,
+            ease: 'power2.in'
+          },
+          at
+        )
+      }
+
+      // INTRO
+      const intro = gsap.timeline({
+        paused: true,
+        defaults: {
+          ease: 'power3.out'
+        }
+      })
+
+      intro
+        .from(wrap, {
+          autoAlpha: 0,
+          z: -700,
+          y: -140,
+          duration: 0.9,
+          ease: 'back.out(1.3)'
+        })
+        .from(
+          words(scenes[0]),
+          {
+            yPercent: 110,
+            rotationX: -70,
+            stagger: 0.06,
+            duration: 0.5
+          },
+          0.2
+        )
+        .from(
+          $('.mobile-title p, .mobile-text', scenes[0]),
+          {
+            y: 60,
+            autoAlpha: 0,
+            stagger: 0.1,
+            duration: 0.5
+          },
+          0.45
+        )
+
+      pop(intro, chips(1), 0.85)
+
+      ScrollTrigger.create({
+        trigger: root,
+        start: 'top 75%',
+        once: true,
+        onEnter: () => intro.play()
+      })
+
+      // MAIN MOBILE STORY
+      const tl = gsap.timeline({
+        defaults: {
+          ease: 'none'
+        },
+
+        scrollTrigger: {
+          trigger: root,
+          start: 'top top',
+          end: '+=550%',
+          pin: true,
+          scrub: 0.6,
+          anticipatePin: 1,
+          invalidateOnRefresh: true
+        }
+      })
+
+      let t = 0
+      const st = []
+
+      scenes.forEach((scene, i) => {
+        st.push(t)
+
+        if (i) {
+          const body = $(
+            '.mobile-text, .mobile-title span',
+            scene
+          )
+
+          tl.fromTo(
+            scene,
+            {
+              autoAlpha: 0
+            },
+            {
+              autoAlpha: 1,
+              duration: 0.05
+            },
+            t
+          )
+            .from(
+              words(scene),
+              {
+                yPercent: 110,
+                rotationX: -70,
+                stagger: 0.06,
+                duration: 0.35,
+                ease: 'power3.out'
+              },
+              t + 0.05
+            )
+
+          if (body.length) {
+            tl.from(
+              body,
+              {
+                y: 140,
+                autoAlpha: 0,
+                rotationX: 20,
+                duration: 0.45,
+                ease: 'power3.out'
+              },
+              t + 0.15
+            )
+          }
+
+          tl.to(
+            bgs[i],
+            {
+              opacity: 1,
+              duration: 0.7
+            },
+            t - OUT
+          )
+        }
+
+        if (i < scenes.length - 1) {
+          tl.to(
+            scene,
+            {
+              autoAlpha: 0,
+              y: -50,
+              duration: OUT,
+              ease: 'power2.in'
+            },
+            t + hold[i] - OUT
+          )
+        }
+
+        t += hold[i]
+      })
+
+      // TAG ANIMATION
+      tl.to(
+        tag,
+        {
+          rotationY: 180,
+          duration: 0.7,
+          ease: 'power2.inOut'
+        },
+        st[1] - 0.1
+      )
+        .to(
+          typed,
+          {
+            n: 3,
+            duration: 0.5,
+            snap: 'n',
+
+            onUpdate: () => {
+              eng.textContent =
+                'MAX'.slice(0, typed.n)
+            }
+          },
+          st[1] + 0.6
+        )
+        .to(
+          tag,
+          {
+            rotationY: 360,
+            duration: 0.7,
+            ease: 'power2.inOut'
+          },
+          st[2] - 0.1
+        )
+        .to(
+          tag,
+          {
+            rotationY: 720,
+            scale: 1.7,
+            y: () => window.innerHeight * 0.17,
+            duration: 0.9,
+            ease: 'power2.inOut'
+          },
+          st[3] - 0.1
+        )
+
+      // CHIPS
+      unpop(tl, chips(1), st[0] + hold[0] - OUT)
+
+      pop(tl, chips(2), st[1] + 0.35)
+
+      unpop(tl, chips(2), st[1] + hold[1] - OUT)
+
+      pop(tl, chips(3), st[2] + 0.35)
+
+      unpop(tl, chips(3), st[2] + hold[2] - OUT)
+
+      // FINAL PAW CONFETTI
+      const radius = () =>
+        Math.min(window.innerWidth * 0.42, 260)
+
+      tl.fromTo(
+        confs,
+        {
+          autoAlpha: 0,
+          scale: 0,
+          x: 0,
+          y: 0
+        },
+        {
+          autoAlpha: 1,
+          scale: 1,
+
+          x: i =>
+            Math.cos(i * 0.785) * radius(),
+
+          y: i =>
+            Math.sin(i * 0.785) *
+            radius() *
+            0.8,
+
+          rotation: i => i * 40,
+
+          duration: 0.6,
+          stagger: 0.04,
+          ease: 'power2.out'
+        },
+
+        st[3] + 0.25
+      )
+
+      // Small hold before releasing the pin
+      tl.to({}, {
+        duration: 0.3
+      }, t)
+    }
+  )
+}
+if (window.matchMedia('(max-width: 700px)').matches) {
+  initMobileAbout()
+}
 /* PRODUCTS ANIMATION */
 gsap.set('.products li', { xPercent: 400, opacity: 0, scale: 0 })
 

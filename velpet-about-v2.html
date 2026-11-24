@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Velpet – About Us</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root { --forest:#143f33; --moss:#285647; --teal:#1caa84; --mint:#25b892; --cream:#f1ead8; --sun:#efd45f; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--forest); font-family: 'Poppins', system-ui, sans-serif; }
+.demo-spacer { height: 70dvh; display: grid; place-items: center; color: var(--cream); }
+
+/* ============ ABOUT US v2 ============ */
+#about { position: relative; height: 100dvh; overflow: hidden; background: var(--teal); }
+#about .a-stage { position: absolute; inset: 0; perspective: 900px; perspective-origin: 50% 35%; isolation: isolate; }
+
+/* fondos: solo cambia la opacidad */
+#about .bg { position: absolute; inset: 0; opacity: 0; }
+#about .b1 { opacity: 1; background: linear-gradient(170deg, var(--mint), var(--teal)); }
+#about .b2 { background: linear-gradient(180deg, var(--moss), var(--forest)); }
+#about .b3 { background: radial-gradient(circle at 15% 8%, #fff3b0, var(--sun) 55%, #e6c13f); }
+#about .b4 { background:
+  radial-gradient(circle at 50% 38%, var(--cream) 0 26%, transparent 26.3%),
+  radial-gradient(circle at 50% 38%, var(--sun) 0 36%, transparent 36.3%),
+  linear-gradient(160deg, var(--mint), var(--teal)); }
+
+/* placa de collar 3D: el elemento memorable */
+#about .tag-wrap { --w: min(28vw, 16dvh); position: absolute; left: 50%; top: 21dvh; width: 0; height: 0; z-index: 2; transform-style: preserve-3d; }
+#about .sway { transform-style: preserve-3d; transform-origin: 0 calc(var(--w) * -.7); animation: sway 4.5s ease-in-out infinite alternate; }
+@keyframes sway { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+#about.is-off .sway { animation-play-state: paused; }
+#about .sway::before { content: ""; position: absolute; width: calc(var(--w) * .34); height: calc(var(--w) * .34); left: calc(var(--w) * -.17); top: calc(var(--w) * -.83); border: 4px solid var(--sun); border-radius: 50%; }
+#about .tag { position: absolute; width: var(--w); height: calc(var(--w) * 1.25); left: calc(var(--w) / -2); top: calc(var(--w) * -.625); transform-style: preserve-3d; will-change: transform; }
+#about .slab, #about .face { position: absolute; inset: 0; border-radius: 1.1rem 1.1rem 1.5rem 1.5rem; }
+#about .slab { background: #0c2a22; transform: translateZ(var(--z)); }
+#about .face { backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--w) * .03); padding-top: 14%; }
+#about .face::before { content: ""; position: absolute; top: 8%; left: 50%; width: 14%; aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%; background: rgba(0,0,0,.3); box-shadow: inset 0 2px 3px rgba(0,0,0,.4); }
+#about .front { background: linear-gradient(160deg, #1d5a47, var(--forest)); color: var(--cream); transform: translateZ(5px); }
+#about .back { background: linear-gradient(160deg, #fff8e6, var(--cream)); color: var(--forest); transform: rotateY(180deg) translateZ(5px); }
+#about .face b { font: 400 calc(var(--w) * .34)/.9 'Anton', Impact, sans-serif; }
+#about .front b + svg + b { color: var(--sun); }
+#about .face svg { width: calc(var(--w) * .2); height: calc(var(--w) * .2); fill: var(--sun); }
+#about .back svg { fill: var(--teal); }
+#about .engrave { min-height: calc(var(--w) * .3); font: 400 calc(var(--w) * .3)/1 'Anton', Impact, sans-serif; letter-spacing: .08em; text-shadow: 0 1px 0 #fff, 0 -1px 0 rgba(0,0,0,.25); }
+
+/* stickers que explican cada idea, en el mismo espacio 3D que la placa */
+#about .chip { position: absolute; left: calc(var(--w) * var(--dx)); top: calc(var(--w) * var(--dy)); visibility: hidden; opacity: 0; white-space: nowrap;
+  padding: .3rem .65rem; border-radius: 999px; background: var(--cream); color: var(--forest); border: 2px solid var(--forest);
+  box-shadow: 0 3px 0 var(--forest); font: 600 .68rem/1.2 'Poppins', sans-serif; }
+
+/* confeti de huellas para la escena final */
+#about .conf { position: absolute; left: 50%; top: 38dvh; width: 28px; height: 28px; margin: -14px 0 0 -14px; z-index: 1; fill: var(--forest); visibility: hidden; opacity: 0; }
+#about .conf:nth-of-type(3n) { fill: var(--cream); }
+#about .conf:nth-of-type(3n+1) { fill: var(--sun); }
+
+/* escenas */
+#about .scene { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; justify-content: flex-end; gap: .8rem;
+  padding: 0 1.1rem calc(env(safe-area-inset-bottom, 0px) + 4dvh); visibility: hidden; opacity: 0; --hd: var(--forest); }
+#about .scene-2 { --hd: var(--cream); }
+#about .title { margin: 0; }
+#about .title h2 { margin: 0; font: 400 clamp(2.2rem, 12vw, 3.8rem)/.92 'Anton', Impact, sans-serif; text-transform: uppercase; color: var(--hd); }
+#about .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .06em; perspective: 400px; }
+#about .w > span { display: inline-block; transform-origin: 50% 100%; }
+#about .title p { margin: .5rem 0 0; font-size: .82rem; line-height: 1.4; color: var(--hd); max-width: 34ch; }
+#about .title-4 span { display: inline-block; margin-top: .7rem; padding: .35rem .9rem; border-radius: 999px; background: var(--cream); color: var(--forest);
+  border: 2px solid var(--forest); box-shadow: 0 3px 0 var(--forest); font: 600 .9rem 'Poppins', sans-serif; }
+#about .text { background: var(--cream); color: var(--forest); border: 2px solid var(--forest); border-radius: 1.4rem; padding: 1rem 1.1rem;
+  box-shadow: 0 5px 0 rgba(20,63,51,.9); font-size: clamp(.76rem, 3.3vw, .92rem); line-height: 1.5; }
+#about .text p { margin: 0; }
+#about .second-texts { display: grid; }
+#about .second-texts p { grid-area: 1 / 1; }
+
+@media (max-height: 680px) { #about .text { font-size: .75rem; line-height: 1.42; } }
+@media (min-width: 820px) {
+  #about .tag-wrap { --w: min(20vw, 30dvh); left: 72%; top: 50%; }
+  #about .scene { width: min(46%, 36rem); padding-left: 8vw; }
+  #about .conf { left: 72%; top: 50%; }
+  #about .b4 { background: radial-gradient(circle at 72% 50%, var(--cream) 0 22%, transparent 22.3%), radial-gradient(circle at 72% 50%, var(--sun) 0 31%, transparent 31.3%), linear-gradient(160deg, var(--mint), var(--teal)); }
+}
+
+/* sin movimiento: contenido apilado y legible */
+@media (prefers-reduced-motion: reduce) {
+  #about { height: auto; background: var(--moss); }
+  #about .a-stage { position: static; padding: 3rem 0; perspective: none; }
+  #about .scene { position: static; visibility: visible; opacity: 1; width: auto; padding: 0 1.1rem; margin-bottom: 2.5rem; --hd: var(--cream); }
+  #about .bg, #about .tag-wrap, #about .conf { display: none; }
+  #about .second-texts p { grid-area: auto; }
+  #about .second-texts p + p { margin-top: .8rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="demo-spacer">↓ scroll</div> <!-- borra los spacers: son solo para probar -->
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="paw" viewBox="0 0 64 64"><ellipse cx="32" cy="42" rx="15" ry="12"/><ellipse cx="14" cy="28" rx="6" ry="8" transform="rotate(-20 14 28)"/><ellipse cx="26" cy="16" rx="6" ry="8.5"/><ellipse cx="38" cy="16" rx="6" ry="8.5"/><ellipse cx="50" cy="28" rx="6" ry="8" transform="rotate(20 50 28)"/></symbol>
+</svg>
+
+<section id="about">
+  <div class="a-stage">
+    <i class="bg b1"></i><i class="bg b2"></i><i class="bg b3"></i><i class="bg b4"></i>
+
+    <svg class="conf"><use href="#paw"/></svg><svg class="conf"><use href="#paw"/></svg><svg class="conf"><use href="#paw"/></svg><svg class="conf"><use href="#paw"/></svg>
+    <svg class="conf"><use href="#paw"/></svg><svg class="conf"><use href="#paw"/></svg><svg class="conf"><use href="#paw"/></svg><svg class="conf"><use href="#paw"/></svg>
+
+    <div class="tag-wrap" aria-hidden="true">
+      <div class="sway">
+        <div class="tag">
+          <i class="slab" style="--z:-3px"></i><i class="slab" style="--z:0px"></i><i class="slab" style="--z:3px"></i>
+          <div class="face front"><b>VEL</b><svg><use href="#paw"/></svg><b>PET</b></div>
+          <div class="face back"><span class="engrave"></span><svg><use href="#paw"/></svg></div>
+        </div>
+      </div>
+      <!-- stickers: --dx / --dy = posición respecto al centro de la placa (en anchos de placa) -->
+      <span class="chip k1" data-r="-6" style="--dx:-1.3;--dy:-.1">Vel → velvet</span>
+      <span class="chip k1" data-r="5" style="--dx:1.3;--dy:.2">Pet → animals</span>
+      <span class="chip k2" data-r="-5" style="--dx:-1.25;--dy:-.45">Well-being</span>
+      <span class="chip k2" data-r="4" style="--dx:1.25;--dy:-.25">Functionality</span>
+      <span class="chip k2" data-r="-3" style="--dx:-1.25;--dy:0">Design</span>
+      <span class="chip k2" data-r="6" style="--dx:1.25;--dy:.2">Eco-friendly</span>
+      <span class="chip k2" data-r="-6" style="--dx:-1.25;--dy:.45">Custom engraving</span>
+      <span class="chip k3" data-r="-5" style="--dx:-1.25;--dy:-.4">Pet health</span>
+      <span class="chip k3" data-r="5" style="--dx:1.25;--dy:-.15">Nutrition</span>
+      <span class="chip k3" data-r="-4" style="--dx:-1.25;--dy:.15">Everyday care</span>
+      <span class="chip k3" data-r="6" style="--dx:1.25;--dy:.4">Community</span>
+    </div>
+
+    <!-- Escena 1 -->
+    <div class="scene scene-1">
+      <div class="title title-1">
+        <h2 class="title-name"> THE VELPET'S HISTORY</h2>
+        <p>Velpet is a brand aiming to release new products for enhance the life of your pet.</p>
+      </div>
+      <div class="aboutme-texts">
+        <div class="first-texts text">
+          <p>The name Velpet combines the words "velvet" and "pet," giving it an elegant and warm meaning. Here is a possible interpretation for your brand.
+          "Vel" comes from "velvet," which is associated with softness, luxury, and care. This evokes the idea of offering products that provide comfort and well-being to pets, emphasizing quality and affection.
+          "Pet" refers directly to animals, making the name clear and easy to associate with the market.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Escena 2 -->
+    <div class="scene scene-2">
+      <div class="title title-2"><h2 class="title-name2"> Velpet as a brand</h2></div>
+      <div class="aboutme-texts">
+        <div class="second-texts text">
+          <p>Velpet is a brand dedicated to improving the quality of life for pets, offering innovative and practical products that combine well-being, functionality, and design. We strive to create solutions that not only benefit pets but also make life easier for their owners. Committed to excellence, we provide high-quality products that promote the health, comfort, and well-being of your most loyal companions.</p>
+          <p>Velpet looks toward a future where care for pets goes hand in hand with care for the planet. We aim to create sustainable products using eco-friendly materials and recyclable packaging, while offering solutions adapted to pets of different breeds and sizes. Through personalized options, such as custom engraving, we seek to make every product more meaningful, functional, and uniquely made for each pet.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Escena 3 -->
+    <div class="scene scene-3">
+      <div class="title title-3"><h2 class="title-name3"> More than a brand</h2></div>
+      <div class="aboutme-texts">
+        <div class="third-texts text">
+          <p>Velpet aims to build a meaningful connection that goes beyond our products. Through educational content about pet health, nutrition, and everyday care, we want to support owners throughout every stage of their pets’ lives. By creating a community where people can share experiences, advice, and their love for animals, Velpet seeks to become more than a pet brand—a space built around well-being, connection, and the bond we share with our companions.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Escena 4 -->
+    <div class="scene scene-4">
+      <div class="title title-4">
+        <h2 class="title-name4"> MADE FOR THEM</h2>
+        <span>Made with care</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="demo-spacer">Siguiente sección</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger)
+ScrollTrigger.config({ ignoreMobileResize: true }) // sin saltos cuando sube/baja la barra del navegador móvil
+
+const root = document.getElementById('about')
+const $ = (s, c = root) => gsap.utils.toArray(s, c)
+
+// pausa el balanceo de la placa cuando la sección no se ve
+new IntersectionObserver(([e]) => root.classList.toggle('is-off', !e.isIntersecting)).observe(root)
+
+// separa los títulos en palabras para animarlas en 3D
+$('.title h2').forEach(h => {
+  h.innerHTML = h.textContent.trim().split(/\s+/).map(w => `<span class="w"><span>${w}</span></span>`).join(' ')
+})
+
+gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+  const scenes = $('.scene')
+  const bgs = $('.bg')
+  const wrap = root.querySelector('.tag-wrap')
+  const tag = root.querySelector('.tag')
+  const eng = root.querySelector('.engrave')
+  const confs = $('.conf')
+  const words = s => $('.w > span', s)
+  const chips = n => $('.k' + n)
+  const hold = [1.6, 2.4, 1.6, 1.5] // "tiempo de scroll" de cada escena
+  const OUT = 0.4
+  const typed = { n: 0 }
+
+  gsap.set('.chip', { xPercent: -50, yPercent: -50 })
+  gsap.set(scenes[0], { autoAlpha: 1 })
+
+  // sticker que "salta" al espacio 3D
+  const pop = (tlx, els, at) => tlx.fromTo(els,
+    { autoAlpha: 0, scale: 0, z: -300, rotation: -25 },
+    { autoAlpha: 1, scale: 1, z: 0, rotation: (i, el) => +el.dataset.r, duration: 0.35, stagger: 0.07, ease: 'back.out(2)' }, at)
+  const unpop = (tlx, els, at) => tlx.to(els, { autoAlpha: 0, scale: 0.5, z: 200, duration: OUT, ease: 'power2.in' }, at)
+
+  // 1) entrada de la escena 1: una sola secuencia al llegar a la sección
+  const intro = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } })
+  intro.from(wrap, { autoAlpha: 0, z: -700, y: -140, duration: 0.9, ease: 'back.out(1.3)' })
+    .from(words(scenes[0]), { yPercent: 110, rotationX: -70, stagger: 0.06, duration: 0.5 }, 0.2)
+    .from($('.title p, .text', scenes[0]), { y: 60, autoAlpha: 0, stagger: 0.1, duration: 0.5 }, 0.45)
+  pop(intro, chips(1), 0.85)
+  ScrollTrigger.create({ trigger: root, start: 'top 75%', once: true, onEnter: () => intro.play() })
+
+  // 2) historia controlada por el scroll
+  const tl = gsap.timeline({
+    defaults: { ease: 'none' },
+    scrollTrigger: { trigger: root, start: 'top top', end: '+=550%', pin: true, scrub: 0.6, anticipatePin: 1, invalidateOnRefresh: true }
+  })
+
+  let t = 0
+  const st = []
+  scenes.forEach((s, i) => {
+    st.push(t)
+    if (i) {
+      const body = $('.text, .title span', s)
+      tl.fromTo(s, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.05 }, t)
+        .from(words(s), { yPercent: 110, rotationX: -70, stagger: 0.06, duration: 0.35, ease: 'power3.out' }, t + 0.05)
+      if (body.length) tl.from(body, { y: 140, autoAlpha: 0, rotationX: 20, duration: 0.45, ease: 'power3.out' }, t + 0.15)
+      tl.to(bgs[i], { opacity: 1, duration: 0.7 }, t - OUT)
+    }
+    if (i < scenes.length - 1) tl.to(s, { autoAlpha: 0, y: -50, duration: OUT, ease: 'power2.in' }, t + hold[i] - OUT)
+    t += hold[i]
+  })
+
+  // placa: gira para revelar el grabado, vuelve al frente y da una vuelta final
+  tl.to(tag, { rotationY: 180, duration: 0.7, ease: 'power2.inOut' }, st[1] - 0.1)
+    .to(typed, { n: 3, duration: 0.5, snap: 'n', onUpdate: () => { eng.textContent = 'MAX'.slice(0, typed.n) } }, st[1] + 0.6)
+    .to(tag, { rotationY: 360, duration: 0.7, ease: 'power2.inOut' }, st[2] - 0.1)
+    .to(tag, { rotationY: 720, scale: 1.7, y: () => innerHeight * 0.17, duration: 0.9, ease: 'power2.inOut' }, st[3] - 0.1)
+
+  // stickers por escena
+  unpop(tl, chips(1), st[0] + hold[0] - OUT)
+  pop(tl, chips(2), st[1] + 0.35)
+  unpop(tl, chips(2), st[1] + hold[1] - OUT)
+  pop(tl, chips(3), st[2] + 0.35)
+  unpop(tl, chips(3), st[2] + hold[2] - OUT)
+
+  // confeti de huellas alrededor de la placa final
+  const R = () => Math.min(innerWidth * 0.42, 260)
+  tl.fromTo(confs, { autoAlpha: 0, scale: 0, x: 0, y: 0 },
+    { autoAlpha: 1, scale: 1, x: i => Math.cos(i * 0.785) * R(), y: i => Math.sin(i * 0.785) * R() * 0.8, rotation: i => i * 40, duration: 0.6, stagger: 0.04, ease: 'power2.out' }, st[3] + 0.25)
+
+  tl.to({}, { duration: 0.3 }, t) // pausa final antes de soltar el pin
+})
+</script>
+</body>
+</html>

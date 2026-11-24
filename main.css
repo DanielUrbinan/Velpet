@@ -3,6 +3,12 @@
   --yellow: #f4d068;
   --font: "Poppins", sans-serif;
   --font_about: "Anton", sans-serif;
+  --forest: #163934;
+  --moss: #285647;
+  --teal: #1caa84;
+  --mint: #25b892;
+  --cream: #f1ead8;
+  --sun: #efd45f;
 }
 * {
   box-sizing: border-box;
@@ -332,9 +338,9 @@ h1 {
   scroll-behavior: smooth;
 }
 
-/*-----------------X-----------------*/
+/*-----------------ABOUT FOR DESKTOP-----------------*/
 
-#about {
+#about-desktop {
   width: 100%;
   height: 100dvh;
   position: relative;
@@ -648,6 +654,283 @@ h1 {
   z-index: 1;
 }
 
+/*-----------ABOUT FOR MOBILE----------*/
+#about-mobile {
+  display: none;
+  position: relative;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--teal);
+}
+#about-mobile .mobile-about-stage {
+  position: absolute;
+  inset: 0;
+  perspective: 900px;
+  perspective-origin: 50% 35%;
+  isolation: isolate;
+}
+
+/* fondos: solo cambia la opacidad */
+#about-mobile .mobile-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+#about-mobile .b1 {
+  opacity: 1;
+  background: linear-gradient(170deg, var(--mint), var(--teal));
+}
+#about-mobile .b2 {
+  background: linear-gradient(180deg, var(--moss), var(--forest));
+}
+#about-mobile .b3 {
+  background: radial-gradient(
+    circle at 15% 8%,
+    #fff3b0,
+    var(--sun) 55%,
+    #e6c13f
+  );
+}
+#about-mobile .b4 {
+  background:
+    radial-gradient(circle at 50% 38%, var(--cream) 0 26%, transparent 26.3%),
+    radial-gradient(circle at 50% 38%, var(--sun) 0 36%, transparent 36.3%),
+    linear-gradient(160deg, var(--mint), var(--teal));
+}
+
+/* placa de collar 3D: el elemento memorable */
+#about-mobile .mobile-tag-wrap {
+  --w: min(28vw, 16dvh);
+  position: absolute;
+  left: 50%;
+  top: 21dvh;
+  width: 0;
+  height: 0;
+  z-index: 2;
+  transform-style: preserve-3d;
+}
+#about-mobile .sway {
+  transform-style: preserve-3d;
+  transform-origin: 0 calc(var(--w) * -0.7);
+  animation: sway 4.5s ease-in-out infinite alternate;
+}
+@keyframes sway {
+  from {
+    transform: rotate(-4deg);
+  }
+  to {
+    transform: rotate(4deg);
+  }
+}
+#about-mobile.is-off .sway {
+  animation-play-state: paused;
+}
+#about-mobile .sway::before {
+  content: "";
+  position: absolute;
+  width: calc(var(--w) * 0.34);
+  height: calc(var(--w) * 0.34);
+  left: calc(var(--w) * -0.17);
+  top: calc(var(--w) * -0.83);
+  border: 4px solid var(--sun);
+  border-radius: 50%;
+}
+#about-mobile .mobile-tag {
+  position: absolute;
+  width: var(--w);
+  height: calc(var(--w) * 1.25);
+  left: calc(var(--w) / -2);
+  top: calc(var(--w) * -0.625);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+#about-mobile .slab,
+#about-mobile .face {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.1rem 1.1rem 1.5rem 1.5rem;
+}
+#about-mobile .slab {
+  background: #0c2a22;
+  transform: translateZ(var(--z));
+}
+#about-mobile .face {
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--w) * 0.03);
+  padding-top: 14%;
+}
+#about-mobile .face::before {
+  content: "";
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  width: 14%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.4);
+}
+#about-mobile .front {
+  background: linear-gradient(160deg, #1d5a47, var(--forest));
+  color: var(--cream);
+  transform: translateZ(5px);
+}
+#about-mobile .back {
+  background: linear-gradient(160deg, #fff8e6, var(--cream));
+  color: var(--forest);
+  transform: rotateY(180deg) translateZ(5px);
+}
+#about-mobile .face b {
+  font:
+    400 calc(var(--w) * 0.34)/0.9 "Anton",
+    Impact,
+    sans-serif;
+}
+#about-mobile .front b + svg + b {
+  color: var(--sun);
+}
+#about-mobile .face svg {
+  width: calc(var(--w) * 0.2);
+  height: calc(var(--w) * 0.2);
+  fill: var(--sun);
+}
+#about-mobile .back svg {
+  fill: var(--teal);
+}
+#about-mobile .mobile-engrave {
+  min-height: calc(var(--w) * 0.3);
+  font:
+    400 calc(var(--w) * 0.3)/1 "Anton",
+    Impact,
+    sans-serif;
+  letter-spacing: 0.08em;
+  text-shadow:
+    0 1px 0 #fff,
+    0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* stickers que explican cada idea, en el mismo espacio 3D que la placa */
+#about-mobile .mobile-chip {
+  position: absolute;
+  left: calc(var(--w) * var(--dx, 0));
+  top: calc(var(--w) * var(--dy, 0));
+  visibility: hidden;
+  opacity: 0;
+  white-space: nowrap;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: var(--cream);
+  color: var(--forest);
+  border: 2px solid var(--forest);
+  box-shadow: 0 3px 0 var(--forest);
+  font:
+    600 0.68rem/1.2 "Poppins",
+    sans-serif;
+}
+
+/* confeti de huellas para la escena final */
+#about-mobile .mobile-conf {
+  position: absolute;
+  left: 50%;
+  top: 38dvh;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  z-index: 1;
+  fill: var(--forest);
+  visibility: hidden;
+  opacity: 0;
+}
+#about-mobile .mobile-conf:nth-of-type(3n) {
+  fill: var(--cream);
+}
+#about-mobile .mobile-conf:nth-of-type(3n + 1) {
+  fill: var(--sun);
+}
+
+/* escenas */
+#about-mobile .mobile-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  padding: 0 1.1rem calc(env(safe-area-inset-bottom, 0px) + 4dvh);
+  visibility: hidden;
+  opacity: 0;
+  --hd: var(--forest);
+}
+#about-mobile .mobile-scene-2 {
+  --hd: var(--cream);
+}
+#about-mobile .mobile-title h2 {
+  margin: 0;
+  font:
+    400 clamp(2.2rem, 12vw, 3.8rem)/0.92 "Anton",
+    Impact,
+    sans-serif;
+  text-transform: uppercase;
+  color: var(--hd);
+}
+#about-mobile .mobile-w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.06em;
+  perspective: 400px;
+}
+#about-mobile .mobile-w > span {
+  display: inline-block;
+  transform-origin: 50% 100%;
+}
+#about-mobile .mobile-title p {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--hd);
+  max-width: 34ch;
+  order: 2;
+}
+#about-mobile .mobile-title-4 span {
+  display: inline-block;
+  margin-top: 0.7rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: var(--cream);
+  color: var(--forest);
+  border: 2px solid var(--forest);
+  box-shadow: 0 3px 0 var(--forest);
+  font:
+    600 0.9rem "Poppins",
+    sans-serif;
+}
+#about-mobile .mobile-text {
+  background: var(--cream);
+  color: var(--forest);
+  border: 2px solid var(--forest);
+  border-radius: 1.4rem;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 5px 0 rgba(20, 63, 51, 0.9);
+  font-size: clamp(0.6rem, 3vw, 0.82rem);
+  line-height: 1.5;
+  font-family: var(--font);
+}
+#about-mobile .mobile-text p {
+  margin: 0;
+}
+#about-mobile .mobile-second-texts {
+  display: grid;
+}
+#about-mobile .mobile-second-texts p {
+}
+
 /*------PRODUCTS SECTION-------*/
 #product {
   width: 100%;
@@ -685,22 +968,8 @@ h1 {
     #fff8ec 100%
   );
   isolation: isolate;
-  /* animation: products 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  animation-timeline: view();
-  animation-range: cover 0% 30%;*/
 }
-/*
-@keyframes products {
-  0% {
-    transform: translateY(10%) scale(0.9);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0%) scale(1);
-    opacity: 1;
-  }
-}
-*/
+
 .stage-bg {
   position: absolute;
   inset: 0;
@@ -907,65 +1176,11 @@ footer {
   .title-1 p {
     font-size: clamp(9px, 0.7rem, 13px);
   }
-  .about-fx {
-    background: radial-gradient(
-      ellipse 35% 35% at 50% 55%,
-      transparent 0%,
-      transparent 23%,
-      rgba(3, 54, 47, 0.15) 39%,
-      rgba(3, 54, 47, 0.55) 65%,
-      rgba(3, 54, 47, 0.85) 100%
-    );
-  }
-  .title-2 {
-    top: 10%;
-  }
-  .title-name2 {
-    font-size: clamp(50px, 4rem, 68px);
-  }
-  .title-3 {
-    font-size: 3rem;
-    line-height: 1.1;
-    left: -9%;
-    top: 12%;
-    text-align: start;
-  }
-  .title-4 {
-    top: 30%;
-  }
-  .title-4 h2 {
-    text-align: left;
-    font-size: clamp(118px, 8rem, 130px);
-  }
-  .title-name4 {
-    line-height: 1;
-  }
-  .text {
-    width: 45%;
-  }
-
-  .first-texts {
-    top: 65%;
-    left: 10%;
-    right: auto;
-    width: 80%;
-  }
-  .second-texts {
-    top: 35%;
-    left: auto;
-    right: 5%;
-    width: 30%;
-  }
-  .second-texts p:nth-child(2) {
+  #about-desktop {
     display: none;
   }
-  .third-texts {
-    top: 45%;
-    left: 10%;
-    right: auto;
-  }
-  .title-4 {
-    max-width: 65%;
+  #about-mobile {
+    display: block;
   }
   .stage {
     width: 100%;
@@ -982,5 +1197,62 @@ footer {
   }
   .products li {
     width: 10rem;
+  }
+  #about-mobile .tag-wrap {
+    --w: min(20vw, 30dvh);
+    left: 72%;
+    top: 50%;
+  }
+  #about-mobile .scene {
+    width: min(46%, 36rem);
+    padding-left: 8vw;
+  }
+  #about-mobile .conf {
+    left: 72%;
+    top: 50%;
+  }
+  #about-mobile .b4 {
+    background:
+      radial-gradient(circle at 72% 50%, var(--cream) 0 22%, transparent 22.3%),
+      radial-gradient(circle at 72% 50%, var(--sun) 0 31%, transparent 31.3%),
+      linear-gradient(160deg, var(--mint), var(--teal));
+  }
+}
+
+@media (max-height: 680px) {
+  #about .mobile-text {
+    font-size: 0.75rem;
+    line-height: 1.42;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #about-mobile {
+    height: auto;
+    background: var(--moss);
+  }
+  #about-mobile .mobile-about-stage {
+    position: static;
+    padding: 3rem 0;
+    perspective: none;
+  }
+  #about-mobile .mobile-scene {
+    position: static;
+    visibility: visible;
+    opacity: 1;
+    width: auto;
+    padding: 0 1.1rem;
+    margin-bottom: 2.5rem;
+    --hd: var(--cream);
+  }
+  /*#about-mobile .mobile-bg,
+  #about .mobile-tag-wrap,
+  #about .mobile-conf {
+    display: none;
+  }*/
+  #about-mobile .second-texts p {
+    grid-area: auto;
+  }
+  #about-mobile .second-texts p + p {
+    margin-top: 0.8rem;
   }
 }
