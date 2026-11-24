@@ -1137,73 +1137,114 @@ if (window.matchMedia('(min-width: 701px)').matches) {
 }
 /* PRODUCTS ANIMATION */
 gsap.set('.products li', { xPercent: 400, opacity: 0, scale: 0 })
+gsap.registerPlugin(ScrollTrigger)
 
+const root = document.getElementById('product')
+const stage = root.querySelector('.stage')
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const TRAVEL = 200
 const spacing = 0.25
 const snapTime = gsap.utils.snap(spacing)
-const products = gsap.utils.toArray('.products li')
-gsap.set('.products li', { xPercent: TRAVEL, opacity: 0, scale: 0.6 })
-const animateFunc = element => {
-  const title = element.querySelector('.product-titles')
-  const tl = gsap.timeline()
-  tl.fromTo(element, { scale: 0.6, zIndex: 0 }, { scale: 1.15, zIndex: 100, duration: 0.5, yoyo: true, repeat: 1, ease: 'power1.in', immediateRender: false })
-    .fromTo(element, { xPercent: TRAVEL }, { xPercent: -TRAVEL, duration: 1, ease: 'none', immediateRender: false }, 0)
-    .fromTo(element,
-      { opacity: 0 },
-      { opacity: 1, duration: 0.15, ease: 'none', immediateRender: false }, 0)
-    // ...y desaparece al salir
-    .to(element,
-      { opacity: 0, duration: 0.15, ease: 'none', immediateRender: false }, 0.85)
-    .fromTo(title,
-      { opacity: 0, y: 10 },
-      { opacity: 1, y: 0, duration: 0.1, yoyo: true, repeat: 1, ease: 'power1.out', immediateRender: false }, 0.4
-    )
-  return tl
+const products = gsap.utils.toArray('.products li', root)
+const n = products.length
+
+// degradados de marca: el fondo cambia con cada producto (siempre oscuro arriba y claro abajo)
+const BGS = [
+  'linear-gradient(180deg, #18ab97 0%, #65c6b7 38%, #d8e6d8 72%, #fff8ec 100%)',
+  'linear-gradient(180deg, #1caa84 0%, #7ad9bd 40%, #e9f0d4 75%, #fbf1c4 100%)',
+  'linear-gradient(180deg, #0fa692 0%, #25b892 35%, #c9ecd9 72%, #f1ead8 100%)',
+  'linear-gradient(180deg, #285647 0%, #1caa84 45%, #a9e0cf 80%, #f6efd0 100%)'
+]
+const layers = gsap.utils.toArray('.bg', root)
+let front = 0
+const changeBg = i => {
+  const back = layers[1 - front]
+  back.style.background = BGS[i % BGS.length]
+  gsap.to(back, { opacity: 1, duration: reduce ? 0 : 0.7, overwrite: true })
+  gsap.to(layers[front], { opacity: 0, duration: reduce ? 0 : 0.7, overwrite: true })
+  front = 1 - front
 }
+
+gsap.set(products, { xPercent: TRAVEL, opacity: 0, scale: 0.6 })
+
+// estilo "coverflow": las tarjetas laterales miran hacia el centro
+const animateFunc = el => gsap.timeline()
+  .fromTo(el, { scale: 0.6, zIndex: 0 }, { scale: 1.15, zIndex: 100, duration: 0.5, yoyo: true, repeat: 1, ease: 'sine.inOut', immediateRender: false })
+  .fromTo(el, { xPercent: TRAVEL, rotationY: -38 }, { xPercent: -TRAVEL, rotationY: 38, duration: 1, ease: 'none', immediateRender: false }, 0)
+  .fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.15, ease: 'none', immediateRender: false }, 0)
+  .to(el, { opacity: 0, duration: 0.15, ease: 'none', immediateRender: false }, 0.85)
 
 const seamlessLoop = buildSeamlessLoop(products, spacing, animateFunc)
 const playhead = { offset: 0 }
 const wrapTime = gsap.utils.wrap(0, seamlessLoop.duration())
 
-const scrub = gsap.to(playhead, {
-  offset: 0,
-  onUpdate () {
-    seamlessLoop.time(wrapTime(playhead.offset))
-  },
-  duration: 0.5,
-  ease: 'power3',
-  paused: true
-})
-seamlessLoop.time(wrapTime(playhead.offset))
-
-// posición objetivo del carrusel: puede crecer o ser negativa sin límite
+// la tarjeta k queda en el centro cuando offset = k * spacing
+const pad = v => String(v).padStart(2, '0')
+const count = root.querySelector('.count')
+const nameEl = root.querySelector('.name')
+const dotsBox = root.querySelector('.dots')
+let active = -1
 let target = 0
 
-const goTo = offset => {
+const dots = products.map((p, k) => {
+  const b = document.createElement('button')
+  b.className = 'dot'
+  b.setAttribute('aria-label', p.textContent.trim())
+  b.addEventListener('click', () => {
+    const cur = Math.round(target / spacing)
+    let d = (((k - cur) % n) + n) % n
+    if (d > n / 2) d -= n // camino más corto
+    goTo((cur + d) * spacing)
+  })
+  dotsBox.appendChild(b)
+  return b
+})
+
+const updateActive = off => {
+  const i = gsap.utils.wrap(0, n, Math.round(off / spacing))
+  if (i === active) return
+  products[active]?.classList.remove('is-active')
+  dots[active]?.classList.remove('is-active')
+  products[i].classList.add('is-active')
+  dots[i].classList.add('is-active')
+  count.textContent = `${pad(i + 1)} / ${pad(n)}`
+  nameEl.textContent = products[i].querySelector('.product-titles').textContent
+  if (active !== -1) {
+    changeBg(i)
+    if (!reduce) gsap.fromTo(nameEl, { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4, ease: 'power3.out', overwrite: true })
+  }
+  active = i
+}
+const render = () => {
+  seamlessLoop.time(wrapTime(playhead.offset))
+  updateActive(playhead.offset)
+}
+
+const scrub = gsap.to(playhead, { offset: 0, onUpdate: render, duration: 0.5, ease: 'power3', paused: true })
+const goTo = offset => { // con animación (botones, puntos, al soltar)
   target = offset
   scrub.vars.offset = target
   scrub.invalidate().restart()
 }
-const jumpTo = offset => {
+const jumpTo = offset => { // inmediato, sin tween (durante el drag)
   target = offset
   scrub.pause()
   playhead.offset = offset
-  seamlessLoop.time(wrapTime(offset))
+  render()
 }
-// Botones
-document.querySelector('.next').addEventListener('click', () => goTo(snapTime(target) + spacing))
-document.querySelector('.prev').addEventListener('click', () => goTo(snapTime(target) - spacing))
+render()
 
-// Drag con pointer events (sin Draggable)
-const area = document.querySelector('.list-products')
+root.querySelector('.next').addEventListener('click', () => goTo(snapTime(target) + spacing))
+root.querySelector('.prev').addEventListener('click', () => goTo(snapTime(target) - spacing))
+
+// drag con pointer events
+const area = root.querySelector('.list-products')
 let dragging = false
 let startX = 0
 let startTarget = 0
-
 const pxPerCard = () => products[0].offsetWidth * (TRAVEL * 2 / 100) * spacing
 
 area.addEventListener('pointerdown', e => {
-  if (e.target.closest('button')) return
   dragging = true
   scrub.pause()
   startX = e.clientX
@@ -1212,8 +1253,7 @@ area.addEventListener('pointerdown', e => {
   area.setPointerCapture(e.pointerId)
 })
 area.addEventListener('pointermove', e => {
-  if (!dragging) return
-  goTo(startTarget + (startX - e.clientX) * spacing / pxPerCard())
+  if (dragging) jumpTo(startTarget + (startX - e.clientX) * spacing / pxPerCard())
 })
 const endDrag = () => {
   if (!dragging) return
@@ -1222,40 +1262,53 @@ const endDrag = () => {
 }
 area.addEventListener('pointerup', endDrag)
 area.addEventListener('pointercancel', endDrag)
+
+// avance automático: solo si la sección se ve y el usuario no la está tocando
+let visible = false
+let timer
+const stop = () => clearInterval(timer)
+const play = () => {
+  stop()
+  if (!reduce && visible) timer = setInterval(() => goTo(snapTime(target) + spacing), 3200)
+}
+new window.IntersectionObserver(([e]) => {
+  visible = e.isIntersecting
+  visible ? play() : stop()
+}).observe(root)
+stage.addEventListener('pointerenter', stop)
+stage.addEventListener('pointerleave', play)
+
+// entrada (una sola vez al llegar)
+const h2 = root.querySelector('.product-title h2')
+
+if (!reduce) {
+  const intro = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } })
+  intro.from('.product-title > span', { y: 12, autoAlpha: 0, duration: 0.5 }, 0)
+    .from('.list-products', { y: 50, autoAlpha: 0, duration: 0.7 }, 0.3)
+    .from('.product-info', { y: 30, autoAlpha: 0, duration: 0.6 }, 0.55)
+  ScrollTrigger.create({ trigger: root, start: 'top 70%', once: true, onEnter: () => intro.play() })
+}
+
 function buildSeamlessLoop (items, spacing, animateFunc) {
-  let overlap = Math.ceil(1 / spacing) // number of EXTRA animations on either side of the start/end to accommodate the seamless looping
-  let startTime = items.length * spacing + 0.5 // the time on the rawSequence at which we'll start the seamless loop
-  let loopTime = (items.length + overlap) * spacing + 1 // the spot at the end where we loop back to the startTime
-  let rawSequence = gsap.timeline({ paused: true }) // this is where all the "real" animations live
-  let seamlessLoop = gsap.timeline({ // this merely scrubs the playhead of the rawSequence so that it appears to seamlessly loop
+  let overlap = Math.ceil(1 / spacing)
+  let startTime = items.length * spacing + 0.5
+  let loopTime = (items.length + overlap) * spacing + 1
+  let rawSequence = gsap.timeline({ paused: true })
+  let seamlessLoop = gsap.timeline({
     paused: true,
-    repeat: -1, // to accommodate infinite scrolling/looping
-    onRepeat () { // works around a super rare edge case bug that's fixed GSAP 3.6.1
-      this._time === this._dur && (this._tTime += this._dur - 0.01)
-    }
+    repeat: -1,
+    onRepeat () { this._time === this._dur && (this._tTime += this._dur - 0.01) }
   })
   let l = items.length + overlap * 2
   let time; let i; let index
-
-  // now loop through and create all the animations in a staggered fashion. Remember, we must create EXTRA animations at the end to accommodate the seamless looping.
   for (i = 0; i < l; i++) {
     index = i % items.length
     time = i * spacing
     rawSequence.add(animateFunc(items[index]), time)
-    i <= items.length && seamlessLoop.add('label' + i, time) // we don't really need these, but if you wanted to jump to key spots using labels, here ya go.
+    i <= items.length && seamlessLoop.add('label' + i, time)
   }
-
-  // here's where we set up the scrubbing of the playhead to make it appear seamless.
   rawSequence.time(startTime)
-  seamlessLoop.to(rawSequence, {
-    time: loopTime,
-    duration: loopTime - startTime,
-    ease: 'none'
-  }).fromTo(rawSequence, { time: overlap * spacing + 1 }, {
-    time: startTime,
-    duration: startTime - (overlap * spacing + 1),
-    immediateRender: false,
-    ease: 'none'
-  })
+  seamlessLoop.to(rawSequence, { time: loopTime, duration: loopTime - startTime, ease: 'none' })
+    .fromTo(rawSequence, { time: overlap * spacing + 1 }, { time: startTime, duration: startTime - (overlap * spacing + 1), immediateRender: false, ease: 'none' })
   return seamlessLoop
 }

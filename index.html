@@ -401,32 +401,44 @@
             <div class="bg bg-a"></div>
             <div class="bg bg-b"></div>
           </div>
-
+          <div class="product-title">
+          <span>Official store</span>
+            <h2>Everything you need for your pet</h2>
+          </div>
         <div class="products-container">
         <div class="list-products">
           <ul class="products">
-            <li class="pro product-1">
+            <li class="pro product-1"
+            style="background-image: url('%BASE_URL%Products/dog_feed.png')">
               <span class="product-titles">Dog feed by Velpet</span>
             </li>
-            <li class="pro product-2">
+            <li class="pro product-2"
+            style="background-image: url('%BASE_URL%Products/cat_feed.jpg')"
+            >
               <span class="product-titles">Cat feed by Velpet</span>
             </li>
-            <li class="pro product-3">
+            <li class="pro product-3"
+            style="background-image: url('%BASE_URL%Products/cat-toy.jpg')">
               <span class="product-titles">Automatic toy for cats</span>
             </li>
-            <li class="pro product-4">
+            <li class="pro product-4"
+            style="background-image: url('%BASE_URL%Products/dog-toy2.jpg')">
               <span class="product-titles">Interactive ball for dogs</span>
             </li>
-            <li class="pro product-5">
+            <li class="pro product-5"
+            style="background-image: url('%BASE_URL%Products/dog-plate.jpg')">
               <span class="product-titles">Slow-feeder bowl</span>
             </li>
-            <li class="pro product-6">
+            <li class="pro product-6"
+            style="background-image: url('%BASE_URL%Products/cat-plate.jpg')">
               <span class="product-titles">Dog food bowl</span>
             </li>
-            <li class="pro product-7">
+            <li class="pro product-7"
+            style="background-image: url('%BASE_URL%Products/dog-bed.webp')">
               <span class="product-titles">Bed for dogs by Velpet</span>
             </li>
-            <li class="pro product-8">
+            <li class="pro product-8"
+            style="background-image: url('%BASE_URL%Products/cat-bed.webp')">
               <span class="product-titles">Bed for cats by Velpet</span>
             </li>
           </ul>
@@ -434,16 +446,51 @@
             <button class="prev material-symbols-outlined">arrow_back</button>
             <button class="next material-symbols-outlined">arrow_forward</button>
         </div>
-        <div class="product-title">
-            <h2>Everything you need for your pet</h2>
-            </div>
         <div class="product-info">
-        <a class="p-cta" href="%BASE_URL%shop.html" target="_blank">Shop now</a>
+          <div class="now" aria-live="polite"><span class="count">01 / 08</span><p class="name"></p></div>
+          <div class="dots" role="group" aria-label="Choose a product"></div>
+          <p class="p-lead">Find every Velpet product in our official store.</p>
+        <a class="p-cta" href="%BASE_URL%shop.html" target="_blank" rel="noopener">Shop now <span class="material-symbols-outlined">arrow_outward</span></a>
         </div>
       </div>
       </section>
     </main>
-    <footer></footer>
+    <footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h2>Velpet</h2>
+      <p>Products made with care to enhance the life of your pet.</p>
+      <a class="footer-cta" href="%BASE_URL%shop.html" target="_blank" rel="noopener">Visit our official store <span aria-hidden="true">↗</span></a>
+    </div>
+
+    <div class="footer-links">
+      <nav class="footer-nav" aria-label="Footer">
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About us</a></li>
+          <li><a href="#product">Products</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="footer-social">
+        <h3>Follow us</h3>
+        <ul> <!-- cambia los # por tus enlaces reales -->
+          <li><a href="#" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="#" target="_blank" rel="noopener">Facebook</a></li>
+          <li><a href="#" target="_blank" rel="noopener">TikTok</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-word" aria-hidden="true">VELPET</div>
+
+  <div class="footer-bottom">
+    <span>© <span id="year">2026</span> Velpet. All rights reserved.</span>
+    <span>Made with care</span>
+  </div>
+</footer>
 
     <script type="module" src="main.js"></script>
   </body>
